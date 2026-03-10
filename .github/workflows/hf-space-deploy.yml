@@ -1,0 +1,52 @@
+name: CI-CD Hugging Face Space
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ci-cd:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ---------- CI ----------
+      - name: Build Docker image
+        run: |
+          docker build -t hf-space-test .
+
+      # Optional: run tests inside container
+      # - name: Run tests
+      #   run: docker run hf-space-test pytest
+
+      # ---------- CD ----------
+      - name: Configure git
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+      - name: Clone Hugging Face Space
+        run: |
+          git clone https://PritamCr:${{ secrets.HF_TOKEN }}@huggingface.co/spaces/PritamCr/autonomous_data_analyst hf-space
+
+      - name: Sync code to Space
+        run: |
+          rsync -av --delete ./ hf-space/ \
+            --exclude .git \
+            --exclude .gitattributes \
+            --exclude .gitignore \
+            --exclude .github \
+            --exclude hfspace \
+            --exclude hf-space \
+            --exclude data/
+
+      - name: Push to Hugging Face
+        run: |
+          cp -r app.py requirements.txt Dockerfile hf-space/
+          cd hf-space
+          git add .
+          git commit -m "Deploy from CI" || echo "No changes"
+          git push
