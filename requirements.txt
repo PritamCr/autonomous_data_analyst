@@ -1,0 +1,8 @@
+plotly
+langchain_groq
+langchain_core
+langchain
+scikit-learn
+pandas
+numpy
+matplotlib
