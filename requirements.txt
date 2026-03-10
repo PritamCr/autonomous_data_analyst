@@ -1,8 +1,10 @@
 plotly
 langchain_groq
 langchain_core
+langchain_experiment
 langchain
 scikit-learn
 pandas
 numpy
 matplotlib
+streamlit
