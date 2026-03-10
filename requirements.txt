@@ -1,8 +1,6 @@
 plotly
-langchain_groq
-langchain_core
-langchain_experiment
-langchain
+langchain_groq==1.1.2
+langchain_experiment ==0.4.1
 scikit-learn
 pandas
 numpy
